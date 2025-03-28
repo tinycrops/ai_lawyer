@@ -1,107 +1,187 @@
-# American Law Dataset - Processing Summary
-
-This document summarizes the results of processing data from the "the-ride-never-ends/american_law" dataset.
+# American Law Dataset Parser - Processing Plan
 
 ## Dataset Overview
 
-The American Law dataset contains a large collection of legal documents from various jurisdictions across the United States. Our processing focused on extracting structured information from these documents, including metadata, section identification, and content analysis.
+The "the-ride-never-ends/american_law" dataset from Hugging Face contains a large collection of American legal documents from various municipalities, counties, and jurisdictions:
 
-## Processing Statistics
+- **Size**: Over 2,700 files with more than 1 million document segments
+- **Structure**:
+  - HTML files (*.html.parquet): ~935 files containing raw document content
+  - Citation files (*.citation.parquet): ~847 files with metadata and references
+  - Metadata files (*.json): ~935 files with additional document information
+  
+- **Document Types**: 
+  - Ordinances - Local laws and regulations
+  - Codes - Codified municipal and county laws
+  - Regulations - Administrative rules
+  - Charters - Founding documents for municipalities
+  - Footnotes - Explanatory text
 
-- **Total Documents Processed**: 150
-- **Total Sections Extracted**: 150
-- **Documents with Metadata**: 23
-- **Document Types Identified**: 4
+## Processing Roadmap
 
-## Document Types
+### 1. Location-Based Processing
 
-| Type | Count | Percentage |
-|------|-------|------------|
-| Ordinance | 45 | 30.0% |
-| Unknown | 41 | 27.3% |
-| Code | 16 | 10.7% |
-| Regulation | 14 | 9.3% |
+Since legal documents are organized by jurisdiction (place_name), we will structure our processing pipeline around geographic entities:
 
-## Geographic Distribution
+1. **Group by State**:
+   - Create state-level aggregation points
+   - Organize documents by state_code (e.g., NC, CA)
 
-| State | Count | Percentage |
-|-------|-------|------------|
-| North Carolina | 16 | 10.7% |
-| Unknown | 134 | 89.3% |
+2. **Subdivide by Municipality/County**:
+   - Further organize by place_name within each state
+   - Create jurisdiction-specific document collections
 
-## Document Structure Analysis
+3. **Temporal Organization**:
+   - Within each jurisdiction, organize by enactment date/year
+   - Create historical timeline of legal developments
 
-Our analysis of the HTML structure of the documents revealed several common patterns:
+### 2. Document Processing Pipeline
 
-1. **Structured Paragraphs**: Most documents (63%) used structured paragraphs with ID or class attributes
-2. **Heading-Based**: Some documents (22%) organized content using heading elements (h1-h4)
-3. **Explicit Sections**: A small number (8%) had explicit section elements
-4. **Unknown Structure**: The remaining documents (7%) had no clear structural pattern
+For each jurisdiction, we will process documents through the following steps:
 
-## Section Extraction Success
+#### A. Schema Detection & HTML Parsing
 
-Our improved section extraction approach successfully identified sections using multiple methods:
+1. **Schema Identification**:
+   - Use the existing schema detection mechanism
+   - Group documents by similar HTML structures
+   - Create schema-specific parsers
 
-- Explicit section elements
-- Heading-based structure
-- Paragraph structure
-- Content grouping
+2. **Content Extraction**:
+   - Extract text content from HTML
+   - Preserve document structure and hierarchies
+   - Handle tables, lists, and special formatting
 
-## Common HTML Classes
+3. **Document Type Classification**:
+   - Classify documents by type (ordinance, code, etc.)
+   - Apply type-specific processing rules
 
-| Class | Frequency | Purpose |
-|-------|-----------|---------|
-| bc | 28 | Base content |
-| p0 | 20 | Paragraph style |
-| top | 14 | Top-level element |
-| ital | 13 | Italic text |
-| section-link | 3 | Section references |
+#### B. LLM-Powered Normalization
 
-## Processing Challenges
+1. **Schema-to-JSON Translation**:
+   - Use Gemini 2.0 Flash to interpret each document structure
+   - Create prompts with schema context and sample parsing patterns
+   - Generate structured JSON output
 
-Several challenges were encountered during processing:
+2. **Prompt Engineering**:
+   ```
+   PROMPT TEMPLATE:
+   You are a legal document parser specializing in American municipal law.
+   
+   DOCUMENT SCHEMA:
+   {schema_signature}
+   
+   DOCUMENT TYPE:
+   {document_type}
+   
+   SOURCE JURISDICTION:
+   {place_name}, {state_name}
+   
+   HTML CONTENT:
+   {html_content}
+   
+   PARSING INSTRUCTIONS:
+   1. Extract the main document content, preserving section structure
+   2. Identify section headings, numbers, and content
+   3. Format date references consistently as YYYY-MM-DD
+   4. Extract any legislative history or citation information
+   5. Preserve footnotes and references
+   
+   OUTPUT FORMAT:
+   Return a JSON object with the following fields:
+   - document_id: Unique identifier
+   - jurisdiction: Place and state information
+   - document_type: The type of document
+   - sections: Array of section objects containing:
+     - section_id: Unique section identifier
+     - section_num: The section number
+     - section_title: The section heading
+     - section_text: The main text content
+     - section_refs: Any references to other sections or documents
+   ```
 
-1. **Metadata Matching**: Difficult to match documents to their corresponding metadata files
-2. **Schema Variation**: Significant variation in HTML structure across documents
-3. **Section Identification**: Complex to establish consistent rules for section boundaries
-4. **Document Type Classification**: Limited indicators for automatic classification
+3. **Quality Control**:
+   - Validate JSON output
+   - Check for missing sections or content
+   - Ensure proper handling of complex formatting
 
-## Recommendations for Further Processing
+#### C. Document Integration
 
-1. **Schema Standardization**: Develop more robust schema detection and normalization
-2. **Metadata Enhancement**: Improve matching between documents and metadata sources
-3. **Citation Extraction**: Implement citation detection and cross-linking
-4. **Named Entity Recognition**: Add extraction of legal entities, dates, and references
-5. **Full-Text Indexing**: Create searchable indexes of document content
+1. **Section Linking**:
+   - Establish connections between related sections
+   - Link references across documents
+   - Create a navigable document graph
 
-## Sample Document Types
+2. **Citation Processing**:
+   - Connect citation metadata with document content
+   - Standardize citation formats
+   - Enable citation-based searches
 
-### Ordinance Example
+3. **Metadata Enhancement**:
+   - Enrich documents with additional metadata
+   - Standardize dates, jurisdiction names, and document types
 
-```
-Published in 1995 by Order of the Board of Commissioners
-Adopted September 5, 1995
-Effective October 1, 1995
-```
+### 3. Storage & Access Layer
 
-### Code Example
+1. **Document Database**:
+   - Organize processed documents in SQLite
+   - Use document_id and section_id for fast lookups
+   - Store full-text for search capabilities
 
-```
-CHAPTER III
-PERMITS
-Section 4.00
-Application Requirements
-```
+2. **Geographic Indexing**:
+   - Create state and locality-based indexes
+   - Enable jurisdiction filtering
+   - Support cross-jurisdiction searches
 
-### Regulation Example
+3. **Document Type Collections**:
+   - Group documents by type
+   - Enable filtering by ordinance, code, regulation, etc.
+   - Provide specialized views for different document types
 
-```
-§ 3.1 General Provisions
-The following regulations shall apply to all development within the jurisdiction of this Ordinance.
-```
+4. **JSON Export Formats**:
+   - Single document export
+   - Jurisdiction collection export
+   - Complete corpus export
 
-## Conclusion
+## Implementation Plan
 
-Our processing of the American Law dataset has successfully extracted structured information from a variety of legal documents. The approaches developed handle different document structures and can identify sections, document types, and metadata when available.
+### Phase 1: Infrastructure (Week 1)
 
-Further improvements could focus on better metadata matching, more sophisticated structure analysis, and deeper content extraction such as citations and legal entities. 
+- Set up processing database
+- Implement document tracking
+- Create schema detection pipeline
+- Build cache and storage mechanisms
+
+### Phase 2: Parsing Engine (Weeks 2-3)
+
+- Develop LLM prompt templates
+- Create schema-specific parsers
+- Implement quality control checks
+- Build document section processor
+
+### Phase 3: Document Organization (Weeks 4-5)
+
+- Implement location-based organization
+- Create document type collections
+- Build citation network
+- Develop document linking
+
+### Phase 4: Access & Visualization (Weeks 6-7)
+
+- Create jurisdiction-based browsers
+- Implement search functionality
+- Build document comparison tools
+- Develop temporal visualization
+
+## Monitoring & Evaluation
+
+- Track processing success rates by document type
+- Monitor schema coverage and parser effectiveness
+- Evaluate LLM performance across different document schemas
+- Measure completeness of document collections by jurisdiction
+
+## Reporting
+
+- Generate processing statistics by jurisdiction
+- Create document coverage maps
+- Report on document type distributions
+- Track historical coverage timeline 

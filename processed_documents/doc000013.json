@@ -1,0 +1,30 @@
+{
+  "document_id": "doc000013",
+  "processed_date": "2025-03-28T02:15:12.590582",
+  "processing_time": 0.8945690218094328,
+  "document_type": "health_code",
+  "jurisdiction": {
+    "state_code": "CA",
+    "place_id": "CA_SF"
+  },
+  "content": {
+    "title": "Simulated processed document doc000013",
+    "sections": [
+      {
+        "id": "1",
+        "title": "Section 1",
+        "content": "This is section 1 content."
+      },
+      {
+        "id": "2",
+        "title": "Section 2",
+        "content": "This is section 2 content."
+      },
+      {
+        "id": "3",
+        "title": "Section 3",
+        "content": "This is section 3 content."
+      }
+    ]
+  }
+}

@@ -1,157 +1,135 @@
-# American Law Dataset Processing
+# American Law Dataset Processor
 
-A set of tools for fetching, processing, and analyzing American Law data from the Hugging Face dataset `the-ride-never-ends/american_law`.
+A comprehensive system for processing, parsing, and organizing the American Law Dataset by jurisdiction (state, city, municipality).
 
 ## Overview
 
-This project provides scripts to download and process American legal documents from state codes, regulations, ordinances, and more. The processing pipeline extracts structured information from raw HTML data, including:
+This project provides a structured approach to process legal documents from the American Law Dataset, organizing them by jurisdiction and document type. It uses the Gemini LLM API to extract structured information from HTML documents.
 
-- Document metadata (state, place name, document type)
-- Section extraction from documents
-- Automatic document type classification
-- Export to structured formats (JSON, CSV)
+### Key Components
 
-## Dataset
+- **Location Processor**: Organizes documents by geographical jurisdiction, allowing for state-by-state and municipality-level processing
+- **Schema Parser**: Identifies document schemas and uses intelligent parsing based on document structure
+- **Schema Manager**: Manages document schemas and optimizes parsing strategies
+- **Interactive Dashboard**: Real-time monitoring of processing status with visualizations
+- **Database Utilities**: Manages the SQLite database that tracks processing status and document metadata
 
-The dataset contains legal documents from American jurisdictions, including:
+## Getting Started
 
-- Ordinances
-- Codes
-- Regulations
-- Statutes
-- Other legal documents
+### Prerequisites
 
-## Scripts
+- Python 3.8+
+- Gemini API key (set as environment variable `GEMINI_API_KEY`)
+- Required Python packages (see `requirements.txt`)
 
-### 1. `fetch_american_law_data.py`
+### Installation
 
-Downloads and processes data from the dataset, storing it in an SQLite database.
+1. Clone the repository
+2. Install dependencies:
+   ```
+   pip install -r requirements.txt
+   ```
+3. Initialize the system:
+   ```
+   python run_processor.py init
+   ```
 
-```bash
-python fetch_american_law_data.py
-```
+### Basic Usage
 
-This script will:
-- Download HTML data from the dataset
-- Process the HTML to extract text content
-- Identify document sections
-- Store the processed data in an SQLite database
-
-### 2. `update_metadata.py`
-
-Updates the metadata for documents in the database using the metadata files from the dataset.
+The system is driven by the `run_processor.py` command-line utility:
 
 ```bash
-python update_metadata.py
+# Process documents by state
+python run_processor.py process --state CA --limit 100
+
+# Analyze document schemas
+python run_processor.py schema --analyze --limit 200
+
+# Generate progress report
+python run_processor.py report --progress
+
+# Show database statistics
+python run_processor.py db --stats
 ```
 
-This script will:
-- Match documents to their metadata files
-- Update document information like state, place name
-- Determine document types based on content analysis
+### Using the Dashboard
 
-### 3. `export_processed_data.py`
+The interactive dashboard provides real-time monitoring of the processing status:
 
-Exports the processed data from the database to JSON or CSV files.
+1. Start the dashboard:
+   ```bash
+   ./start_dashboard.sh
+   ```
+   Or manually:
+   ```bash
+   python dashboard.py
+   ```
 
-```bash
-python export_processed_data.py
-```
+2. Access the dashboard in your web browser at http://localhost:5000
 
-This script will:
-- Export all documents and sections
-- Create separate files for different document types
-- Create separate files for different states
-- Generate a metadata summary
+3. Dashboard features:
+   - Overall processing progress
+   - State coverage statistics
+   - Document type breakdown
+   - Processing history charts
+   - Recent processing runs
+   - Interactive data refresh
+   - Direct processor execution
 
-### 4. `analyze_document_structure.py`
-
-Analyzes the HTML structure of documents to identify patterns for section extraction.
-
-```bash
-python analyze_document_structure.py
-```
-
-This script will:
-- Analyze HTML structure of sample documents
-- Identify section patterns
-- Save analysis results to JSON files
+4. Simulate processing for testing:
+   ```bash
+   python simulate_processing.py --continuous
+   ```
 
 ## Directory Structure
 
-- `data_cache/` - Cached data files from the dataset
-- `processed_data/` - Exported processed data files
-- `analysis_results/` - Results from document structure analysis
-- `american_law_data.db` - SQLite database with processed documents
-
-## Data Schema
-
-### Documents Table
-
-- `doc_id` - Unique document identifier
-- `cid` - Content ID from the original dataset
-- `place_name` - Name of the place (city, county, etc.)
-- `state_code` - Two-letter state code
-- `state_name` - Full state name
-- `document_type` - Type of document (Ordinance, Code, etc.)
-- `content_text` - Extracted text content
-- `raw_html` - Original HTML content
-
-### Sections Table
-
-- `section_id` - Unique section identifier
-- `doc_id` - Parent document ID
-- `section_num` - Section number or identifier
-- `section_title` - Section title or heading
-- `section_text` - Section text content
-
-## Examples
-
-### Working with the exported JSON data
-
-```python
-import json
-
-# Load documents
-with open('processed_data/processed_documents.json', 'r') as f:
-    documents = [json.loads(line) for line in f]
-
-# Load sections
-with open('processed_data/all_sections.json', 'r') as f:
-    sections = [json.loads(line) for line in f]
-
-# Print document types
-doc_types = set(doc['document_type'] for doc in documents if doc['document_type'])
-print(f"Document types: {doc_types}")
-
-# Find documents from North Carolina
-nc_docs = [doc for doc in documents if doc['state_code'] == 'NC']
-print(f"Found {len(nc_docs)} documents from North Carolina")
+```
+.
+├── american_law_data.db       # SQLite database
+├── dashboard.py               # Interactive web dashboard
+├── data_cache/                # Downloaded raw data
+├── processed_documents/       # Processed and structured data output
+├── schema_cache/              # Schema data and patterns
+├── reports/                   # Visualization reports
+├── templates/                 # Dashboard HTML templates
+└── db_backups/                # Database backup files
 ```
 
-### Working with the SQLite database
+## Processing Workflow
 
-```python
-import sqlite3
+1. **Data Acquisition**: Download and organize raw HTML documents by jurisdiction
+2. **Schema Analysis**: Identify document patterns and structure to optimize parsing
+3. **Document Processing**: Use the Gemini LLM to extract structured data from documents
+4. **Progress Tracking**: Monitor processing status through the interactive dashboard
+5. **Data Utilization**: Utilize the processed data for legal research and analysis
 
-# Connect to the database
-conn = sqlite3.connect('american_law_data.db')
-cursor = conn.cursor()
+## Key Files
 
-# Query all ordinances
-cursor.execute("SELECT * FROM documents WHERE document_type = 'Ordinance'")
-ordinances = cursor.fetchall()
-print(f"Found {len(ordinances)} ordinances")
+- `location_processor.py`: Main processor that organizes documents by jurisdiction
+- `schema_parser.py`: Parser that normalizes HTML based on document schema
+- `schema_manager.py`: Manager for document schemas and parsing strategies
+- `db_utils.py`: Database utility functions
+- `dashboard.py`: Interactive web dashboard for monitoring progress
+- `simulate_processing.py`: Tool for simulating document processing
+- `run_processor.py`: Command-line utility for running the processor
 
-# Get sections for a specific document
-doc_id = ordinances[0][0]  # First document's ID
-cursor.execute("SELECT * FROM sections WHERE doc_id = ?", (doc_id,))
-sections = cursor.fetchall()
-print(f"Document has {len(sections)} sections")
+## Database Schema
 
-conn.close()
-```
+The system uses an SQLite database with the following tables:
+
+- `states`: Tracks states and their document counts
+- `places`: Tracks municipalities and their document counts
+- `jurisdiction_documents`: Records document metadata and processing status
+- `processing_runs`: Logs processing runs with timing and statistics
 
 ## License
 
-This project processes data from the Hugging Face dataset `the-ride-never-ends/american_law`. Please refer to the original dataset license for usage rights and restrictions 
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Contact
+
+For questions and support, please open an issue in the repository. 

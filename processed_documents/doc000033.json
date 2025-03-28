@@ -1,0 +1,30 @@
+{
+  "document_id": "doc000033",
+  "processed_date": "2025-03-28T02:15:19.203344",
+  "processing_time": 2.7397135616606008,
+  "document_type": "regulation",
+  "jurisdiction": {
+    "state_code": "CA",
+    "place_id": "CA_SF"
+  },
+  "content": {
+    "title": "Simulated processed document doc000033",
+    "sections": [
+      {
+        "id": "1",
+        "title": "Section 1",
+        "content": "This is section 1 content."
+      },
+      {
+        "id": "2",
+        "title": "Section 2",
+        "content": "This is section 2 content."
+      },
+      {
+        "id": "3",
+        "title": "Section 3",
+        "content": "This is section 3 content."
+      }
+    ]
+  }
+}
