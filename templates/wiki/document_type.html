@@ -1,0 +1,80 @@
+{% extends "wiki/base.html" %}
+
+{% block title %}{{ document_type }} - American Law Wiki{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="/wiki/document_types">Document Types</a></li>
+<li class="breadcrumb-item active" aria-current="page">{{ document_type }}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>{{ document_type }}</h1>
+    
+    <div>
+        {% if total_count > 0 %}
+        <div class="progress" style="width: 200px; height: 10px;">
+            <div class="progress-bar" role="progressbar" 
+                 style="width: {{ percentage|round|int }}%;" 
+                 aria-valuenow="{{ percentage|round|int }}" 
+                 aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <small class="text-muted">
+            {{ processed_count }} / {{ total_count }} documents processed
+            ({{ percentage|round|int }}%)
+        </small>
+        {% else %}
+        <span class="badge bg-secondary">No documents</span>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3>Example Documents</h3>
+            </div>
+            <div class="card-body">
+                {% if documents %}
+                <div class="list-group">
+                    {% for doc in documents %}
+                    <a href="/wiki/document/{{ doc.document_id }}" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{ doc.document_id }}</h5>
+                            <small>{{ doc.processed_date }}</small>
+                        </div>
+                        <p class="mb-1">{{ doc.state_name }} - {{ doc.place_name }}</p>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p>No processed documents found for this type.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>States</h3>
+            </div>
+            <div class="card-body">
+                {% if states %}
+                <div class="list-group">
+                    {% for state in states %}
+                    <a href="/wiki/state/{{ state.state_code }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        {{ state.state_name }}
+                        <span class="badge bg-primary rounded-pill">{{ state.count }}</span>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p>No states found for this document type.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

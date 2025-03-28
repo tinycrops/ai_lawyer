@@ -32,12 +32,16 @@ def list_dataset_files(subfolder: Optional[str] = None) -> List[str]:
         List[str]: List of file paths in the repository
     """
     try:
-        path_filter = f"{subfolder}/" if subfolder else None
+        # Updated to use a pattern without path_filter which isn't supported
         files = list_repo_files(
             repo_id=REPO_ID,
-            repo_type=REPO_TYPE,
-            path_filter=path_filter
+            repo_type=REPO_TYPE
         )
+        
+        # Filter the files manually if subfolder is specified
+        if subfolder:
+            files = [f for f in files if f.startswith(subfolder)]
+            
         return files
     except Exception as e:
         logger.error(f"Error listing dataset files: {e}")
@@ -157,8 +161,37 @@ def get_document_html(document_id: str) -> Optional[str]:
     Returns:
         Optional[str]: HTML content as string or None if failed
     """
-    file_path = f"american_law/html/{document_id}.html"
-    return read_cached_html(file_path)
+    try:
+        # Get list of data files that might contain HTML content
+        html_files = [f for f in list_dataset_files("american_law/data") if "_html.parquet" in f]
+        
+        # Load each parquet file and check for the document ID
+        for html_file in html_files:
+            logger.info(f"Checking for document {document_id} in {html_file}")
+            df = read_cached_parquet(html_file)
+            
+            if df is None:
+                continue
+                
+            # Check if this file contains the document
+            if 'doc_id' in df.columns and document_id in df['doc_id'].values:
+                # Extract the HTML content for this document
+                doc_rows = df[df['doc_id'] == document_id]
+                
+                if 'html' in doc_rows.columns and not doc_rows.empty:
+                    # Concatenate all HTML fragments for this document in order
+                    if 'doc_order' in doc_rows.columns:
+                        doc_rows = doc_rows.sort_values('doc_order')
+                    
+                    # Concatenate all HTML parts
+                    html_content = ''.join(doc_rows['html'].tolist())
+                    return html_content
+                
+        logger.error(f"Document {document_id} not found in any HTML parquet files")
+        return None
+    except Exception as e:
+        logger.error(f"Error retrieving HTML for document {document_id}: {e}")
+        return None
 
 def get_metadata_for_document(document_id: str) -> Optional[Dict]:
     """
@@ -203,7 +236,11 @@ def batch_download_metadata() -> Dict[str, Dict]:
     for file_path in metadata_files:
         metadata = read_cached_json(file_path)
         if metadata:
-            all_metadata.update(metadata)
+            # Check if metadata is a dictionary and has items to update
+            if isinstance(metadata, dict):
+                all_metadata.update(metadata)
+            else:
+                logger.warning(f"Metadata in {file_path} is not a dictionary: {type(metadata)}")
     
     logger.info(f"Downloaded metadata for {len(all_metadata)} documents")
     return all_metadata 

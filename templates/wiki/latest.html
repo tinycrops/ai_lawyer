@@ -1,0 +1,35 @@
+{% extends "wiki/base.html" %}
+
+{% block title %}Latest Documents - American Law Wiki{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item active" aria-current="page">Latest Documents</li>
+{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Latest Processed Documents</h1>
+<p class="lead">Recently processed documents in the American Law Wiki.</p>
+
+<div class="card mb-4">
+    <div class="card-body">
+        {% if documents %}
+        <div class="list-group">
+            {% for doc in documents %}
+            <a href="/wiki/document/{{ doc.document_id }}" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ doc.document_type }}</h5>
+                    <small>{{ doc.processed_date }}</small>
+                </div>
+                <p class="mb-1">{{ doc.state_name }} - {{ doc.place_name }}</p>
+                <small class="text-muted">{{ doc.document_id }}</small>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            <p>No documents have been processed yet.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

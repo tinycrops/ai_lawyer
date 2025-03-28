@@ -1,0 +1,61 @@
+{% extends "wiki/base.html" %}
+
+{% block title %}States - American Law Wiki{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item active" aria-current="page">States</li>
+{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">U.S. States and Territories</h1>
+<p class="lead">Browse legal documents by state or territory.</p>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <p>There are <strong>{{ total_states }}</strong> states and territories with legal documents in the database.</p>
+    </div>
+</div>
+
+{% for region, states in states_by_region.items() %}
+{% if states %}
+<div class="card mb-4">
+    <div class="card-header">
+        <h3>{{ region }}</h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            {% for state in states %}
+            <div class="col-md-3 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="/wiki/state/{{ state.state_code }}">{{ state.state_name }}</a>
+                        </h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ state.state_code }}</h6>
+                        <p class="card-text">
+                            <small>
+                                <strong>Places:</strong> {{ state.places_count }}<br>
+                                <strong>Documents:</strong> {{ state.document_count }}
+                            </small>
+                        </p>
+                    </div>
+                    {% if state.document_count > 0 %}
+                    <div class="card-footer">
+                        <div class="progress" style="height: 5px;">
+                            <div class="progress-bar" role="progressbar" style="width: {{ (state.processed_count / state.document_count * 100)|round|int }}%;"
+                                 aria-valuenow="{{ (state.processed_count / state.document_count * 100)|round|int }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <small class="text-muted mt-1 d-block text-center">
+                            {{ (state.processed_count / state.document_count * 100)|round|int }}% processed
+                        </small>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+{% endblock %} 

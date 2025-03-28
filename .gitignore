@@ -1,0 +1,6 @@
+.env
+data_cache/
+db_backups/
+processed_documents/
+reports/
+schema_cache/

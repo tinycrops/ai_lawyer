@@ -193,14 +193,14 @@ def import_documents_from_metadata(state_code: Optional[str] = None) -> Dict:
         places = {}
         
         for doc_id, doc_info in metadata.items():
-            # Skip if missing key information
-            if not doc_id:
+            # Skip if missing key information or if doc_info is not a dictionary
+            if not doc_id or not isinstance(doc_info, dict):
                 continue
             
-            # Extract state information
-            doc_state_code = doc_info.get('state_code')
-            doc_state_name = doc_info.get('state_name')
-            doc_place_name = doc_info.get('place_name')
+            # Extract state information - safely get values
+            doc_state_code = doc_info.get('state_code', '')
+            doc_state_name = doc_info.get('state_name', '')
+            doc_place_name = doc_info.get('place_name', '')
             
             # Skip documents without state or place info
             if not doc_state_code or not doc_place_name:
@@ -234,8 +234,8 @@ def import_documents_from_metadata(state_code: Optional[str] = None) -> Dict:
                 document_id=doc_id,
                 state_code=doc_state_code,
                 place_id=place_id,
-                document_type=doc_info.get('document_type'),
-                document_date=doc_info.get('date'),
+                document_type=doc_info.get('document_type', None),
+                document_date=doc_info.get('date', None),
                 html_path=f"american_law/html/{doc_id}.html"
             )
             

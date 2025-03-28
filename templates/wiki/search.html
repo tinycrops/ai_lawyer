@@ -1,0 +1,68 @@
+{% extends "wiki/base.html" %}
+
+{% block title %}Search - American Law Wiki{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item active" aria-current="page">Search</li>
+{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <h1>Search Documents</h1>
+    <p class="lead">Search for legal documents across the American Law Wiki.</p>
+    
+    <form action="/wiki/search" method="get" class="my-4">
+        <div class="input-group input-group-lg">
+            <input type="text" class="form-control" name="q" placeholder="Search documents..." value="{{ query }}">
+            <button class="btn btn-primary" type="submit">
+                <i class="bi bi-search me-2"></i> Search
+            </button>
+        </div>
+    </form>
+</div>
+
+{% if query %}
+<div class="card mb-4">
+    <div class="card-header">
+        <h4>Search Results for "{{ query }}"</h4>
+    </div>
+    <div class="card-body">
+        <p>Found {{ result_count }} documents matching your query.</p>
+    </div>
+</div>
+
+{% if results %}
+<div class="list-group mb-4">
+    {% for doc in results %}
+    <a href="/wiki/document/{{ doc.document_id }}" class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{ doc.document_type }}</h5>
+            <small>{{ doc.processed_date }}</small>
+        </div>
+        <p class="mb-1">{{ doc.state_name }} - {{ doc.place_name }}</p>
+        <small class="text-muted">{{ doc.document_id }}</small>
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">
+    <p>No documents matched your search query. Try using different keywords.</p>
+</div>
+{% endif %}
+
+{% endif %}
+
+<div class="card">
+    <div class="card-header">
+        <h4>Search Tips</h4>
+    </div>
+    <div class="card-body">
+        <ul>
+            <li>Search for document types like "Statute", "Regulation", or "Court Decision".</li>
+            <li>Search by state name or abbreviation (e.g., "California" or "CA").</li>
+            <li>Search by city or county name (e.g., "Los Angeles", "Miami").</li>
+            <li>Search for document IDs if you know them.</li>
+        </ul>
+    </div>
+</div>
+{% endblock %} 

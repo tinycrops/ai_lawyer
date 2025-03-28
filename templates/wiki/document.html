@@ -1,0 +1,130 @@
+{% extends "wiki/base.html" %}
+
+{% block title %}{{ document.document_type }} - {{ document.jurisdiction }} - American Law Wiki{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="/wiki/states">States</a></li>
+<li class="breadcrumb-item"><a href="/wiki/state/{{ document.state_code }}">{{ document.state_name }}</a></li>
+<li class="breadcrumb-item"><a href="/wiki/place/{{ document.place_id }}">{{ document.place_name }}</a></li>
+<li class="breadcrumb-item active" aria-current="page">{{ document.document_type }}</li>
+{% endblock %}
+
+{% block sidebar_content %}
+<h5 class="mb-3">Table of Contents</h5>
+<div class="list-group">
+    {% for section in document.sections %}
+    <a href="#section-{{ section.section_id }}" class="list-group-item list-group-item-action">
+        {% if section.section_num %}{{ section.section_num }} - {% endif %}
+        {{ section.section_title|default:"Section" }}
+    </a>
+    {% endfor %}
+</div>
+
+<div class="mt-4">
+    <h5 class="mb-3">Document Info</h5>
+    <ul class="list-group">
+        <li class="list-group-item d-flex justify-content-between">
+            <span>Type:</span>
+            <span class="text-end fw-bold">{{ document.document_type }}</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+            <span>Jurisdiction:</span>
+            <span class="text-end fw-bold">{{ document.jurisdiction }}</span>
+        </li>
+        {% if document.date %}
+        <li class="list-group-item d-flex justify-content-between">
+            <span>Date:</span>
+            <span class="text-end">{{ document.date }}</span>
+        </li>
+        {% endif %}
+        <li class="list-group-item d-flex justify-content-between">
+            <span>ID:</span>
+            <span class="text-end text-muted">{{ document.document_id }}</span>
+        </li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="document-header mb-4">
+    <h1 class="mb-3">{{ document.document_type }}</h1>
+    <h4 class="text-muted">{{ document.jurisdiction }}</h4>
+    {% if document.date %}
+    <p class="text-muted">Date: {{ document.date }}</p>
+    {% endif %}
+</div>
+
+{% for section in document.sections %}
+<div id="section-{{ section.section_id }}" class="section">
+    <h3 class="section-title">
+        {% if section.section_num %}
+        <span class="section-num">{{ section.section_num }}</span> -
+        {% endif %}
+        {{ section.section_title|default:"Section" }}
+    </h3>
+    <div class="section-content">
+        {{ section.section_text|linebreaks }}
+    </div>
+    
+    {% if section.section_refs %}
+    <div class="section-references mt-3">
+        <h6>References:</h6>
+        <ul class="list-unstyled">
+            {% for ref in section.section_refs %}
+            <li>{{ ref }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+</div>
+{% endfor %}
+
+<div class="mt-5">
+    <h4>Metadata</h4>
+    <div class="card">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Document ID</dt>
+                <dd class="col-sm-9">{{ document.document_id }}</dd>
+                
+                <dt class="col-sm-3">State</dt>
+                <dd class="col-sm-9">{{ document.state_name }} ({{ document.state_code }})</dd>
+                
+                <dt class="col-sm-3">Place</dt>
+                <dd class="col-sm-9">{{ document.place_name }}</dd>
+                
+                <dt class="col-sm-3">Document Type</dt>
+                <dd class="col-sm-9">{{ document.document_type }}</dd>
+                
+                {% if document.date %}
+                <dt class="col-sm-3">Date</dt>
+                <dd class="col-sm-9">{{ document.date }}</dd>
+                {% endif %}
+                
+                <dt class="col-sm-3">Processing Time</dt>
+                <dd class="col-sm-9">{{ document.processing_time|floatformat:2 }} seconds</dd>
+                
+                <dt class="col-sm-3">Processed Date</dt>
+                <dd class="col-sm-9">{{ document.processed_date }}</dd>
+            </dl>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Smooth scrolling for TOC links
+        document.querySelectorAll('a[href^="#section-"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    });
+</script>
+{% endblock %} 

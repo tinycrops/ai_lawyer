@@ -1,0 +1,36 @@
+{% extends "wiki/base.html" %}
+
+{% block title %}Document Not Processed - American Law Wiki{% endblock %}
+
+{% block content %}
+<div class="alert alert-warning">
+    <h3>Document Not Yet Processed</h3>
+    <p>The document with ID: <strong>{{ document_id }}</strong> has not been processed yet.</p>
+    <p>This document is in the database but has not been analyzed and structured by the AI system.</p>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h4>Document Information</h4>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Document ID</dt>
+            <dd class="col-sm-9">{{ document_id }}</dd>
+            
+            <dt class="col-sm-3">Type</dt>
+            <dd class="col-sm-9">{{ document_type if document_type else "Unknown" }}</dd>
+            
+            <dt class="col-sm-3">State</dt>
+            <dd class="col-sm-9">{{ state_name }}</dd>
+            
+            <dt class="col-sm-3">Place</dt>
+            <dd class="col-sm-9">{{ place_name }}</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="/wiki" class="btn btn-primary">Back to Home</a>
+</div>
+{% endblock %} 

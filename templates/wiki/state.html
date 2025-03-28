@@ -1,0 +1,103 @@
+{% extends "wiki/base.html" %}
+
+{% block title %}{{ state.state_name }} - American Law Wiki{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="/wiki/states">States</a></li>
+<li class="breadcrumb-item active" aria-current="page">{{ state.state_name }}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>{{ state.state_name }} <small class="text-muted">{{ state.state_code }}</small></h1>
+    
+    <div>
+        {% if state.document_count > 0 %}
+        <div class="progress" style="width: 200px; height: 10px;">
+            <div class="progress-bar" role="progressbar" 
+                 style="width: {{ (state.processed_count / state.document_count * 100)|round|int }}%;" 
+                 aria-valuenow="{{ (state.processed_count / state.document_count * 100)|round|int }}" 
+                 aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <small class="text-muted">
+            {{ state.processed_count }} / {{ state.document_count }} documents processed
+            ({{ (state.processed_count / state.document_count * 100)|round|int }}%)
+        </small>
+        {% else %}
+        <span class="badge bg-secondary">No documents</span>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3>Places in {{ state.state_name }}</h3>
+            </div>
+            <div class="card-body">
+                {% if places %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Documents</th>
+                                <th>Progress</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for place in places %}
+                            <tr>
+                                <td><a href="/wiki/place/{{ place.place_id }}">{{ place.place_name }}</a></td>
+                                <td>{{ place.place_type }}</td>
+                                <td>{{ place.document_count }}</td>
+                                <td>
+                                    {% if place.document_count > 0 %}
+                                    <div class="progress" style="height: 5px;">
+                                        <div class="progress-bar" role="progressbar" 
+                                             style="width: {{ place.percentage|round|int }}%;" 
+                                             aria-valuenow="{{ place.percentage|round|int }}" 
+                                             aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <small>{{ place.percentage|round|int }}%</small>
+                                    {% else %}
+                                    <span class="badge bg-secondary">No documents</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p>No places found for this state.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>Document Types</h3>
+            </div>
+            <div class="card-body">
+                {% if document_types %}
+                <div class="list-group">
+                    {% for doc_type in document_types %}
+                    <a href="/wiki/document_types/{{ doc_type.document_type|urlencode }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        {{ doc_type.document_type }}
+                        <span class="badge bg-primary rounded-pill">{{ doc_type.count }}</span>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p>No document types found for this state.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

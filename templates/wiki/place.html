@@ -1,0 +1,105 @@
+{% extends "wiki/base.html" %}
+
+{% block title %}{{ place.place_name }} - {{ place.state_name }} - American Law Wiki{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="/wiki/states">States</a></li>
+<li class="breadcrumb-item"><a href="/wiki/state/{{ place.state_code }}">{{ place.state_name }}</a></li>
+<li class="breadcrumb-item active" aria-current="page">{{ place.place_name }}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>{{ place.place_name }}, {{ place.state_name }}</h1>
+    
+    <div>
+        {% if place.document_count > 0 %}
+        <div class="progress" style="width: 200px; height: 10px;">
+            <div class="progress-bar" role="progressbar" 
+                 style="width: {{ place.percentage|round|int }}%;" 
+                 aria-valuenow="{{ place.percentage|round|int }}" 
+                 aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <small class="text-muted">
+            {{ place.processed_count }} / {{ place.document_count }} documents processed
+            ({{ place.percentage|round|int }}%)
+        </small>
+        {% else %}
+        <span class="badge bg-secondary">No documents</span>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h3>Place Information</h3>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Name</dt>
+            <dd class="col-sm-9">{{ place.place_name }}</dd>
+            
+            <dt class="col-sm-3">Type</dt>
+            <dd class="col-sm-9">{{ place.place_type }}</dd>
+            
+            <dt class="col-sm-3">State</dt>
+            <dd class="col-sm-9">{{ place.state_name }} ({{ place.state_code }})</dd>
+            
+            <dt class="col-sm-3">Documents</dt>
+            <dd class="col-sm-9">{{ place.document_count }}</dd>
+            
+            <dt class="col-sm-3">Processed</dt>
+            <dd class="col-sm-9">{{ place.processed_count }} ({{ place.percentage|round|int }}%)</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3>Documents</h3>
+            </div>
+            <div class="card-body">
+                {% if documents %}
+                <div class="list-group">
+                    {% for doc in documents %}
+                    <a href="/wiki/document/{{ doc.document_id }}" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{ doc.document_type }}</h5>
+                            <small>{{ doc.processed_date }}</small>
+                        </div>
+                        <small class="text-muted">{{ doc.document_id }}</small>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p>No documents found for this place.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>Document Types</h3>
+            </div>
+            <div class="card-body">
+                {% if document_types %}
+                <div class="list-group">
+                    {% for doc_type in document_types %}
+                    <a href="/wiki/document_types/{{ doc_type.document_type|urlencode }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        {{ doc_type.document_type }}
+                        <span class="badge bg-primary rounded-pill">{{ doc_type.count }}</span>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p>No document types found for this place.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

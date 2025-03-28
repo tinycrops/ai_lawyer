@@ -1,0 +1,15 @@
+{% extends "wiki/base.html" %}
+
+{% block title %}Document Error - American Law Wiki{% endblock %}
+
+{% block content %}
+<div class="alert alert-danger">
+    <h3>Error Loading Document</h3>
+    <p>There was an error loading the document with ID: <strong>{{ document_id }}</strong></p>
+    <p>{{ error }}</p>
+</div>
+
+<div class="mt-4">
+    <a href="/wiki" class="btn btn-primary">Back to Home</a>
+</div>
+{% endblock %} 

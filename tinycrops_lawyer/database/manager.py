@@ -728,78 +728,108 @@ def end_processing_run(
 
 # ============= Statistics and Reporting =============
 
-def get_processing_statistics() -> Dict:
+def get_processing_statistics():
     """
-    Get statistics about the document processing status.
+    Get overall processing statistics.
     
     Returns:
-        Dict: Dictionary with various statistics
+        dict: Dictionary with statistics about document processing
     """
     session = get_session()
-    try:
-        # Total documents
-        total_documents = session.query(func.count(Document.id)).scalar() or 0
-        
-        # Processed documents
-        processed_documents = session.query(func.count(Document.id)).filter_by(is_processed=True).scalar() or 0
-        
-        # Calculate percentage
-        overall_percentage = (processed_documents / total_documents * 100) if total_documents > 0 else 0
-        
-        # Count states and places
-        states_count = session.query(func.count(State.state_code)).scalar() or 0
-        places_count = session.query(func.count(Place.place_id)).scalar() or 0
-        
-        # Document types stats
-        doc_types_query = text("""
-            SELECT document_type, 
-                   COUNT(*) as count, 
-                   SUM(CASE WHEN is_processed = 1 THEN 1 ELSE 0 END) as processed
-            FROM documents
-            GROUP BY document_type
-            ORDER BY count DESC
-        """)
-        document_types = [dict(row) for row in session.execute(doc_types_query)]
-        
-        # State stats
-        state_stats_query = text("""
-            SELECT s.state_code, s.state_name, s.document_count, s.processed_count,
-                  (CAST(s.processed_count AS FLOAT) / NULLIF(s.document_count, 0)) * 100 as percentage
-            FROM states s
-            ORDER BY percentage DESC, document_count DESC
-        """)
-        state_stats = [dict(row) for row in session.execute(state_stats_query)]
-        
-        # Recent runs
-        recent_runs_query = session.query(ProcessingRun).order_by(ProcessingRun.start_time.desc()).limit(10)
-        recent_runs = [
-            {
-                'run_id': run.run_id,
-                'start_time': run.start_time.isoformat(),
-                'end_time': run.end_time.isoformat() if run.end_time else None,
-                'status': run.status,
-                'documents_processed': run.documents_processed,
-                'errors_count': run.errors_count,
-                'model_name': run.model_name
-            }
-            for run in recent_runs_query
-        ]
-        
-        return {
-            'total_documents': total_documents,
-            'processed_documents': processed_documents,
-            'overall_percentage': overall_percentage,
-            'states_count': states_count,
-            'places_count': places_count,
-            'document_types': document_types,
-            'state_stats': state_stats,
-            'recent_runs': recent_runs
+    from tinycrops_lawyer.database.models import Document, State, Place
+    from sqlalchemy import func
+    
+    # Get document counts
+    total_documents = session.query(Document).count()
+    processed_documents = session.query(Document).filter(Document.is_processed == True).count()
+    
+    # Get state and place counts
+    states_count = session.query(State).count()
+    places_count = session.query(Place).count()
+    
+    # Get document types
+    doc_types_query = (
+        session.query(
+            Document.document_type,
+            func.count(Document.id).label('count')
+        )
+        .group_by(Document.document_type)
+        .order_by(func.count(Document.id).desc())
+    )
+    
+    document_types = [
+        {
+            'document_type': doc_type or 'Unknown',
+            'count': count
         }
-    except SQLAlchemyError as e:
-        logger.error(f"Error getting processing statistics: {e}")
-        return {}
-    finally:
+        for doc_type, count in doc_types_query
+    ]
+    
+    # Calculate overall percentage
+    overall_percentage = 0
+    if total_documents > 0:
+        overall_percentage = round(processed_documents / total_documents * 100)
+    
+    session.close()
+    
+    return {
+        'total_documents': total_documents,
+        'processed_documents': processed_documents,
+        'states_count': states_count,
+        'places_count': places_count,
+        'overall_percentage': overall_percentage,
+        'document_types': document_types
+    }
+
+def get_all_states():
+    """
+    Get all states with counts.
+    
+    Returns:
+        list: List of state dictionaries with counts
+    """
+    session = get_session()
+    states = []
+    
+    for state in session.query(State).all():
+        states.append({
+            'state_code': state.state_code,
+            'state_name': state.state_name,
+            'document_count': state.document_count,
+            'processed_count': state.processed_count,
+            'places_count': state.places_count
+        })
+    
+    session.close()
+    return states
+
+def get_state(state_code):
+    """
+    Get a specific state with counts.
+    
+    Args:
+        state_code: The state code (e.g., 'CA', 'NY')
+        
+    Returns:
+        dict: State dictionary with counts or None if not found
+    """
+    session = get_session()
+    state = session.query(State).filter_by(state_code=state_code).first()
+    
+    if not state:
         session.close()
+        return None
+    
+    result = {
+        'state_code': state.state_code,
+        'state_name': state.state_name,
+        'document_count': state.document_count,
+        'processed_count': state.processed_count,
+        'places_count': state.places_count
+    }
+    
+    session.close()
+    return result
 
 def export_to_csv(output_dir: str = "exports") -> Optional[Dict[str, str]]:
     """

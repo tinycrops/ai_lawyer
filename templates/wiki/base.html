@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}American Law Wiki{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+        .main-content {
+            flex: 1;
+        }
+        .sidebar {
+            min-width: 250px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+            border-right: 1px solid #dee2e6;
+        }
+        .document-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .section {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        .section-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .section-num {
+            font-weight: normal;
+            color: #6c757d;
+        }
+        .breadcrumb {
+            padding: 0.75rem 1rem;
+            background-color: #e9ecef;
+            border-radius: 0.25rem;
+        }
+        .footer {
+            margin-top: auto;
+            background-color: #f8f9fa;
+            border-top: 1px solid #dee2e6;
+            padding: 1rem 0;
+        }
+        .navbar-brand {
+            font-weight: 700;
+        }
+        .toc-item {
+            padding: 0.25rem 0;
+        }
+        .toc-item a {
+            text-decoration: none;
+            color: #495057;
+        }
+        .toc-item a:hover {
+            color: #007bff;
+        }
+        .search-box {
+            margin: 1rem 0;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/wiki">American Law Wiki</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/wiki">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/wiki/states">States</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/wiki/document_types">Document Types</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/wiki/search">Search</a>
+                    </li>
+                </ul>
+                <form class="d-flex" action="/wiki/search" method="get">
+                    <input class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-light" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid main-content">
+        <div class="row">
+            {% block sidebar %}
+            <div class="col-md-3 col-lg-2 d-none d-md-block sidebar py-3">
+                <div class="search-box">
+                    <form action="/wiki/search" method="get">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Quick Search" name="q">
+                            <button class="btn btn-outline-secondary" type="submit">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                {% block sidebar_content %}{% endblock %}
+            </div>
+            {% endblock %}
+            
+            <div class="col-md-9 col-lg-10 py-3">
+                {% block breadcrumbs %}
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/wiki">Home</a></li>
+                        {% block breadcrumb_items %}{% endblock %}
+                    </ol>
+                </nav>
+                {% endblock %}
+                
+                <div class="document-content">
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer text-center">
+        <div class="container">
+            <p class="mb-0">American Law Wiki - Powered by TinyCrops AI Lawyer - &copy; {{ now('Y') }}</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html> 

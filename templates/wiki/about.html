@@ -1,0 +1,109 @@
+{% extends "wiki/base.html" %}
+
+{% block title %}About - American Law Wiki{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item active" aria-current="page">About</li>
+{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">About the American Law Wiki</h1>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h3>Overview</h3>
+        <p>The American Law Wiki is an AI-powered repository of legal documents from across the United States. This system processes and structures legal texts to make them more accessible and usable.</p>
+        
+        <p>Using advanced natural language processing techniques, the system:</p>
+        <ul>
+            <li>Analyzes the structure of legal documents</li>
+            <li>Identifies sections, paragraphs, and references</li>
+            <li>Creates a consistent JSON schema for each document type</li>
+            <li>Provides a searchable web interface to browse the documents</li>
+        </ul>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header">
+                <h3>Processing Pipeline</h3>
+            </div>
+            <div class="card-body">
+                <ol>
+                    <li><strong>Data Collection</strong>: Documents are collected from the American Law dataset.</li>
+                    <li><strong>Schema Analysis</strong>: AI identifies the document structure.</li>
+                    <li><strong>Parsing Methodology</strong>: Custom parsing rules are generated.</li>
+                    <li><strong>Document Processing</strong>: Raw documents are transformed into structured data.</li>
+                    <li><strong>Validation</strong>: Results are checked for consistency and completeness.</li>
+                    <li><strong>Storage</strong>: Processed documents are saved in a standardized format.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header">
+                <h3>Technology Stack</h3>
+            </div>
+            <div class="card-body">
+                <ul>
+                    <li><strong>Backend</strong>: Python with Flask</li>
+                    <li><strong>Database</strong>: SQLite with SQLAlchemy ORM</li>
+                    <li><strong>AI Processing</strong>: Google Gemini API</li>
+                    <li><strong>Frontend</strong>: Bootstrap 5, HTML/CSS/JavaScript</li>
+                    <li><strong>Data Source</strong>: HuggingFace American Law Dataset</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h3>System Statistics</h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3 text-center mb-3">
+                <div class="display-5">{{ stats.total_documents }}</div>
+                <div>Total Documents</div>
+            </div>
+            <div class="col-md-3 text-center mb-3">
+                <div class="display-5">{{ stats.processed_documents }}</div>
+                <div>Processed</div>
+            </div>
+            <div class="col-md-3 text-center mb-3">
+                <div class="display-5">{{ stats.states_count }}</div>
+                <div>States</div>
+            </div>
+            <div class="col-md-3 text-center mb-3">
+                <div class="display-5">{{ stats.places_count }}</div>
+                <div>Places</div>
+            </div>
+        </div>
+        
+        <div class="progress mt-3">
+            <div class="progress-bar" role="progressbar" style="width: {{ stats.overall_percentage }}%;" 
+                 aria-valuenow="{{ stats.overall_percentage }}" aria-valuemin="0" aria-valuemax="100">
+                {{ stats.overall_percentage }}% Processed
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3>Credits & Attribution</h3>
+    </div>
+    <div class="card-body">
+        <p>This project was developed by the TinyCrops team as part of a demonstration of AI capabilities in processing legal documents.</p>
+        
+        <p>Data source: <a href="https://huggingface.co/datasets/the-ride-never-ends/american_law" target="_blank">American Law Dataset on HuggingFace</a></p>
+        
+        <p>Powered by Google's Gemini API for advanced natural language processing.</p>
+    </div>
+</div>
+{% endblock %} 
