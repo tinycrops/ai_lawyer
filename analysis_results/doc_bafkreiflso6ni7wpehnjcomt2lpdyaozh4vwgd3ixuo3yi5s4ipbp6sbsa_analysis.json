@@ -1,0 +1,70 @@
+{
+  "document_id": "bafkreiflso6ni7wpehnjcomt2lpdyaozh4vwgd3ixuo3yi5s4ipbp6sbsa",
+  "cid": "bafkreiflso6ni7wpehnjcomt2lpdyaozh4vwgd3ixuo3yi5s4ipbp6sbsa",
+  "place_name": null,
+  "state_code": null,
+  "html_structure": {
+    "tag_counts": {
+      "div": 3,
+      "b": 3,
+      "p": 2,
+      "br": 1
+    },
+    "class_counts": {
+      "chunk-content": 1,
+      "footnote-content": 1,
+      "refcrossFN": 1,
+      "refstatelawFN": 1
+    },
+    "potential_sections": [],
+    "headings": [],
+    "parent_child_patterns": [
+      {
+        "parent": {
+          "tag": "div",
+          "classes": [
+            "chunk-content"
+          ],
+          "id": ""
+        },
+        "children": [
+          "div"
+        ]
+      },
+      {
+        "parent": {
+          "tag": "div",
+          "classes": [
+            "footnote-content"
+          ],
+          "id": ""
+        },
+        "children": [
+          "div",
+          "b",
+          "p",
+          "p",
+          "br"
+        ]
+      }
+    ]
+  },
+  "section_pattern": {
+    "pattern": "structured_paragraphs",
+    "reason": "Found 2 paragraphs with IDs or classes",
+    "selector": "p[id], p[class]",
+    "count": 2
+  },
+  "sample_sections": [
+    {
+      "section_id": "section_1",
+      "heading": "Paragraph 1",
+      "content_preview": "Cross reference\u00e2\u20ac\u201d \n               Environment, ch. 26; fire prevention and protection, ch. 30; floods, ch. 34; historical preservation, ch. 38; manufactured homes and trailers, ch. 46; smoking in pub..."
+    },
+    {
+      "section_id": "section_2",
+      "heading": "Paragraph 2",
+      "content_preview": "State Law reference\u00e2\u20ac\u201d \n               Authority of county to levy taxes for building inspection, G.S. 153A-149(c)(26)."
+    }
+  ]
+}

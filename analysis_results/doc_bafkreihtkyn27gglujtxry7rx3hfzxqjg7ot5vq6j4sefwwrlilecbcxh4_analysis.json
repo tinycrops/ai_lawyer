@@ -1,0 +1,166 @@
+{
+  "document_id": "bafkreihtkyn27gglujtxry7rx3hfzxqjg7ot5vq6j4sefwwrlilecbcxh4",
+  "cid": "bafkreihtkyn27gglujtxry7rx3hfzxqjg7ot5vq6j4sefwwrlilecbcxh4",
+  "place_name": null,
+  "state_code": null,
+  "html_structure": {
+    "tag_counts": {
+      "p": 65,
+      "span": 22,
+      "td": 22,
+      "tr": 11,
+      "div": 9,
+      "br": 9,
+      "col": 8,
+      "a": 4,
+      "table": 4,
+      "colgroup": 4,
+      "tbody": 2,
+      "u": 2,
+      "img": 1
+    },
+    "class_counts": {
+      "bc": 28,
+      "p0": 20,
+      "top": 14,
+      "ital": 13,
+      "bc0": 8,
+      "sig_table_cell": 8,
+      "bold": 7,
+      "std": 4,
+      "section-link": 3,
+      "left": 2,
+      "b1": 2,
+      "ulsingle": 2,
+      "sig_table": 2,
+      "chunk-content": 1,
+      "b": 1
+    },
+    "potential_sections": [],
+    "headings": [],
+    "parent_child_patterns": [
+      {
+        "parent": {
+          "tag": "div",
+          "classes": [
+            "chunk-content"
+          ],
+          "id": ""
+        },
+        "children": [
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p"
+        ]
+      },
+      {
+        "parent": {
+          "tag": "div",
+          "classes": [],
+          "id": ""
+        },
+        "children": [
+          "div",
+          "p"
+        ]
+      },
+      {
+        "parent": {
+          "tag": "div",
+          "classes": [],
+          "id": ""
+        },
+        "children": [
+          "table"
+        ]
+      },
+      {
+        "parent": {
+          "tag": "div",
+          "classes": [],
+          "id": ""
+        },
+        "children": [
+          "div",
+          "p"
+        ]
+      },
+      {
+        "parent": {
+          "tag": "div",
+          "classes": [],
+          "id": ""
+        },
+        "children": [
+          "table"
+        ]
+      }
+    ]
+  },
+  "section_pattern": {
+    "pattern": "structured_paragraphs",
+    "reason": "Found 63 paragraphs with IDs or classes",
+    "selector": "p[id], p[class]",
+    "count": 63
+  },
+  "sample_sections": [
+    {
+      "section_id": "section_1",
+      "heading": "Paragraph 1",
+      "content_preview": "____________"
+    },
+    {
+      "section_id": "section_2",
+      "heading": "Paragraph 2",
+      "content_preview": "Published in 1995 by Order of the Board of Commissioners"
+    },
+    {
+      "section_id": "section_3",
+      "heading": "Paragraph 3",
+      "content_preview": "Adopted September 5, 1995"
+    },
+    {
+      "section_id": "section_4",
+      "heading": "Paragraph 4",
+      "content_preview": "Effective October 1, 1995"
+    },
+    {
+      "section_id": "section_5",
+      "heading": "Paragraph 5",
+      "content_preview": "____________"
+    }
+  ]
+}

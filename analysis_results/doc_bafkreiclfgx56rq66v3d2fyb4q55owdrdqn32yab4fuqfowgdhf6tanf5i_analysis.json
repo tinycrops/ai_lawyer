@@ -1,0 +1,70 @@
+{
+  "document_id": "bafkreiclfgx56rq66v3d2fyb4q55owdrdqn32yab4fuqfowgdhf6tanf5i",
+  "cid": "bafkreiclfgx56rq66v3d2fyb4q55owdrdqn32yab4fuqfowgdhf6tanf5i",
+  "place_name": null,
+  "state_code": null,
+  "html_structure": {
+    "tag_counts": {
+      "div": 3,
+      "b": 3,
+      "p": 2,
+      "br": 1
+    },
+    "class_counts": {
+      "chunk-content": 1,
+      "footnote-content": 1,
+      "refcrossFN": 1,
+      "refstatelawFN": 1
+    },
+    "potential_sections": [],
+    "headings": [],
+    "parent_child_patterns": [
+      {
+        "parent": {
+          "tag": "div",
+          "classes": [
+            "chunk-content"
+          ],
+          "id": ""
+        },
+        "children": [
+          "div"
+        ]
+      },
+      {
+        "parent": {
+          "tag": "div",
+          "classes": [
+            "footnote-content"
+          ],
+          "id": ""
+        },
+        "children": [
+          "div",
+          "b",
+          "p",
+          "p",
+          "br"
+        ]
+      }
+    ]
+  },
+  "section_pattern": {
+    "pattern": "structured_paragraphs",
+    "reason": "Found 2 paragraphs with IDs or classes",
+    "selector": "p[id], p[class]",
+    "count": 2
+  },
+  "sample_sections": [
+    {
+      "section_id": "section_1",
+      "heading": "Paragraph 1",
+      "content_preview": "Cross reference\u00e2\u20ac\u201d \n               Inspection of pet stores, \u00c2\u00a7 6-72; registration of building contractors, \u00c2\u00a7 10-73; ambulance services, \u00c2\u00a7 22-26 et seq.; franchise collectors and haulers of solid wa..."
+    },
+    {
+      "section_id": "section_2",
+      "heading": "Paragraph 2",
+      "content_preview": "State Law reference\u00e2\u20ac\u201d \n               Authority to regulate and license occupations, businesses, trades and professions,\n               G.S. 153A-134."
+    }
+  ]
+}

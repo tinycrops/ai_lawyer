@@ -1,0 +1,42 @@
+{
+  "document_id": "bafkreieezn5jr7vb7quouakn2vx5t33trquhsb2sc533lspjwpwlb334ey",
+  "cid": "bafkreieezn5jr7vb7quouakn2vx5t33trquhsb2sc533lspjwpwlb334ey",
+  "place_name": null,
+  "state_code": null,
+  "html_structure": {
+    "tag_counts": {
+      "div": 1,
+      "br": 1
+    },
+    "class_counts": {
+      "chunk-content": 1
+    },
+    "potential_sections": [],
+    "headings": [],
+    "parent_child_patterns": [
+      {
+        "parent": {
+          "tag": "div",
+          "classes": [
+            "chunk-content"
+          ],
+          "id": ""
+        },
+        "children": [
+          "br"
+        ]
+      }
+    ]
+  },
+  "section_pattern": {
+    "pattern": "unknown",
+    "reason": "Could not detect a clear section pattern"
+  },
+  "sample_sections": [
+    {
+      "section_id": "content_1",
+      "heading": "Content 1",
+      "content_preview": ""
+    }
+  ]
+}

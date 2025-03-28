@@ -1,0 +1,78 @@
+{
+  "document_id": "bafkreig4k3pl6qj4ozvsjg3jpvximbugma3lsd5r55mzuxdtpqrv7vlpti",
+  "cid": "bafkreig4k3pl6qj4ozvsjg3jpvximbugma3lsd5r55mzuxdtpqrv7vlpti",
+  "place_name": null,
+  "state_code": null,
+  "html_structure": {
+    "tag_counts": {
+      "td": 540,
+      "tr": 140,
+      "a": 82,
+      "div": 3,
+      "col": 2,
+      "br": 2,
+      "p": 1,
+      "table": 1,
+      "colgroup": 1,
+      "tbody": 1
+    },
+    "class_counts": {
+      "top": 540,
+      "section-link": 82,
+      "chunk-content": 1,
+      "refmanual0": 1,
+      "left": 1,
+      "std": 1
+    },
+    "potential_sections": [],
+    "headings": [],
+    "parent_child_patterns": [
+      {
+        "parent": {
+          "tag": "div",
+          "classes": [
+            "chunk-content"
+          ],
+          "id": ""
+        },
+        "children": [
+          "p",
+          "div"
+        ]
+      },
+      {
+        "parent": {
+          "tag": "div",
+          "classes": [],
+          "id": ""
+        },
+        "children": [
+          "div"
+        ]
+      },
+      {
+        "parent": {
+          "tag": "div",
+          "classes": [],
+          "id": ""
+        },
+        "children": [
+          "table"
+        ]
+      }
+    ]
+  },
+  "section_pattern": {
+    "pattern": "structured_paragraphs",
+    "reason": "Found 1 paragraphs with IDs or classes",
+    "selector": "p[id], p[class]",
+    "count": 1
+  },
+  "sample_sections": [
+    {
+      "section_id": "section_1",
+      "heading": "Paragraph 1",
+      "content_preview": "This is a chronological listing of the ordinances of the county used in this Code.\n            Repealed or superseded laws at the time of the codification and any omitted materials\n            are not..."
+    }
+  ]
+}
